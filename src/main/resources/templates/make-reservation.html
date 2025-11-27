@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Reservar</title></head>
+<body>
+  <h2>Hacer reserva</h2>
+  <form th:action="@{/reservations/save}" th:object="${reservation}" method="post">
+    <label>Fecha: <input type="date" th:field="*{date}" required></label><br>
+
+    <label>Zona:
+      <select th:field="*{zone}" required>
+        <option th:each="z : ${zones}" th:value="${z}" th:text="${z.name}"></option>
+      </select>
+    </label><br>
+
+    <label>Deporte:
+      <select th:field="*{sport}" required>
+        <option th:each="s : ${sports}" th:value="${s}" th:text="${s.name}"></option>
+      </select>
+    </label><br>
+
+    <label>Horario:
+      <select th:field="*{schedule}" required>
+        <option th:each="sc : ${schedules}" th:value="${sc}" th:text="${sc.timeSlot}"></option>
+      </select>
+    </label><br>
+
+    <label>Método de pago:
+      <select th:field="*{paymentMethod}" required>
+        <option th:each="p : ${payments}" th:value="${p}" th:text="${p.name}"></option>
+      </select>
+    </label><br>
+
+    <label>Notas: <textarea th:field="*{notes}"></textarea></label><br>
+    <button type="submit">Reservar</button>
+  </form>
+
+  <a href="/">Volver</a>
+</body>
+</html>
