@@ -1,21 +1,9 @@
-<<<<<<< HEAD
-package main.java.com.proyecto.fundamentos.model;
-
-import jakarta.persistence.*;
-import lombok.*;
-
-@Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-=======
 package com.example.sportlink.model;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "partners")
->>>>>>> d6e6ff7 (pardo gay)
 public class Partner {
 
     @Id
@@ -23,9 +11,6 @@ public class Partner {
     private Long id;
 
     private String name;
-<<<<<<< HEAD
-    private String document;
-=======
     private String address;
     private String phone;
 
@@ -44,5 +29,4 @@ public class Partner {
 
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
->>>>>>> d6e6ff7 (pardo gay)
 }
