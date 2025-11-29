@@ -1,23 +1,22 @@
-package com.example.sportlink.controller;
+package com.proyecto.fundamentos.controller;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import com.example.sportlink.repository.PartnerRepository;
+
+import com.proyecto.fundamentos.repository.PartnerRepository;
 
 @Controller
 public class HomeController {
-    private final PartnerRepository partnerRepo;
-    public HomeController(PartnerRepository partnerRepo){ this.partnerRepo = partnerRepo; }
+    private final PartnerRepository partnerRepository;
 
-    @GetMapping("/")
-    public String index(Model model){
-        model.addAttribute("partners", partnerRepo.findAll());
-        return "index";
+    public HomeController(PartnerRepository partnerRepository) {
+        this.partnerRepository = partnerRepository;
     }
 
-    @GetMapping("/partners")
-    public String partners(Model model){
-        model.addAttribute("partners", partnerRepo.findAll());
-        return "partners";
+    @GetMapping("/")
+    public String home(Model model) {
+        model.addAttribute("partners", partnerRepository.findAll());
+        return "home";
     }
 }
