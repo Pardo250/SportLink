@@ -1,58 +1,61 @@
-package com.example.sportlink.controller;
+package com.proyecto.fundamentos.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import jakarta.servlet.http.HttpSession;
 
-import com.example.sportlink.repository.*;
-import com.example.sportlink.model.*;
-
-import java.time.LocalDate;
-import java.util.List;
+import com.proyecto.fundamentos.repository.*;
+import com.proyecto.fundamentos.entity.*;
 
 @Controller
 @RequestMapping("/reservations")
 public class ReservationController {
-    private final ZoneRepository zoneRepo;
-    private final SportRepository sportRepo;
-    private final ScheduleRepository scheduleRepo;
-    private final PaymentMethodRepository paymentRepo;
-    private final ReservationRepository reservationRepo;
 
-    public ReservationController(ZoneRepository zoneRepo, SportRepository sportRepo,
-        ScheduleRepository scheduleRepo, PaymentMethodRepository paymentRepo,
-        ReservationRepository reservationRepo){
-        this.zoneRepo = zoneRepo; this.sportRepo = sportRepo; this.scheduleRepo = scheduleRepo;
-        this.paymentRepo = paymentRepo; this.reservationRepo = reservationRepo;
+    private final ZoneRepository zoneRepository;
+    private final SportRepository sportRepository;
+    private final ScheduleRepository scheduleRepository;
+    private final PaymentMethodRepository paymentMethodRepository;
+    private final ReservationRepository reservationRepository;
+
+    public ReservationController(ZoneRepository zoneRepository, SportRepository sportRepository,
+                                  ScheduleRepository scheduleRepository, PaymentMethodRepository paymentMethodRepository,
+                                  ReservationRepository reservationRepository) {
+        this.zoneRepository = zoneRepository;
+        this.sportRepository = sportRepository;
+        this.scheduleRepository = scheduleRepository;
+        this.paymentMethodRepository = paymentMethodRepository;
+        this.reservationRepository = reservationRepository;
     }
 
-    @GetMapping("/new")
-    public String newReservation(Model model){
-        model.addAttribute("zones", zoneRepo.findAll());
-        model.addAttribute("sports", sportRepo.findAll());
-        model.addAttribute("schedules", scheduleRepo.findAll());
-        model.addAttribute("payments", paymentRepo.findAll());
+    @GetMapping
+    public String showReservationForm(Model model) {
+        model.addAttribute("zones", zoneRepository.findAll());
+        model.addAttribute("sports", sportRepository.findAll());
+        model.addAttribute("schedules", scheduleRepository.findAll());
+        model.addAttribute("paymentMethods", paymentMethodRepository.findAll());
         model.addAttribute("reservation", new Reservation());
-        return "make-reservation";
+        return "reservation-form";
     }
 
-    @PostMapping("/save")
-    public String saveReservation(@ModelAttribute Reservation reservation, HttpSession session, Model model){
-        User user = (User) session.getAttribute("user");
-        if(user == null) { return "redirect:/login"; }
+    @PostMapping
+    public String createReservation(@ModelAttribute Reservation reservation) {
+        // Simulación de usuario (deberías obtenerlo de la sesión)
+        User user = new User();
+        user.setId(1L);
         reservation.setUser(user);
         reservation.setStatus("CONFIRMED");
-        reservationRepo.save(reservation);
-        return "redirect:/reservations/mine";
+        reservationRepository.save(reservation);
+        return "redirect:/reservations/success";
     }
 
-    @GetMapping("/mine")
-    public String myReservations(HttpSession session, Model model){
-        User user = (User) session.getAttribute("user");
-        if(user == null) return "redirect:/login";
-        List<Reservation> list = reservationRepo.findByUserId(user.getId());
-        model.addAttribute("reservations", list);
-        return "my-reservations";
+    @GetMapping("/success")
+    public String reservationSuccess(Model model) {
+        // Simulación de usuario
+        User user = new User();
+        user.setId(1L);
+        
+        Reservation lastReservation = reservationRepository.findAll().get(0);
+        model.addAttribute("reservation", lastReservation);
+        return "reservation-success";
     }
 }

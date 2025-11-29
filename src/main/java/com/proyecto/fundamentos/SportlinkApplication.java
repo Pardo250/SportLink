@@ -1,4 +1,4 @@
-package com.example.sportlink;
+package com.proyecto.fundamentos;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
