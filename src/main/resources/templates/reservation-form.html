@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservar - SportLink</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --secondary: #7c3aed;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            min-height: 100vh;
+            padding: 40px 0;
+        }
+        
+        .reservation-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .reservation-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .reservation-header i {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+        
+        .reservation-body {
+            padding: 40px 30px;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 10px;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
+        }
+        
+        .btn-reserve {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-reserve:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(79, 70, 229, 0.4);
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .section-title {
+            color: var(--primary);
+            font-weight: bold;
+            margin: 25px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="reservation-container">
+            <div class="reservation-header">
+                <i class="fas fa-calendar-check"></i>
+                <h2 class="mb-0">Hacer una Reserva</h2>
+                <p class="mb-0">Completa el formulario para reservar tu cancha</p>
+            </div>
+            
+            <div class="reservation-body">
+                <form th:action="@{/reservations}" method="post" th:object="${reservation}">
+                    
+                    <h4 class="section-title">
+                        <i class="fas fa-map-marker-alt me-2"></i>Ubicación
+                    </h4>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="zone" class="form-label">Zona</label>
+                            <select class="form-select" id="zone" th:field="*{zone.id}" required>
+                                <option value="">Selecciona una zona</option>
+                                <option th:each="zone : ${zones}" 
+                                        th:value="${zone.id}" 
+                                        th:text="${zone.name}">Zona</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="sport" class="form-label">Deporte</label>
+                            <select class="form-select" id="sport" th:field="*{sport.id}" required>
+                                <option value="">Selecciona un deporte</option>
+                                <option th:each="sport : ${sports}" 
+                                        th:value="${sport.id}" 
+                                        th:text="${sport.name}">Deporte</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <h4 class="section-title">
+                        <i class="fas fa-clock me-2"></i>Fecha y Hora
+                    </h4>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="date" class="form-label">Fecha</label>
+                            <input type="date" class="form-control" id="date" required>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="schedule" class="form-label">Horario</label>
+                            <select class="form-select" id="schedule" required>
+                                <option value="">Selecciona un horario</option>
+                                <option th:each="schedule : ${schedules}" 
+                                        th:value="${schedule.id}" 
+                                        th:text="${schedule.startTime} + ' - ' + ${schedule.endTime}">Horario</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <h4 class="section-title">
+                        <i class="fas fa-credit-card me-2"></i>Método de Pago
+                    </h4>
+                    
+                    <div class="mb-4">
+                        <label for="paymentMethod" class="form-label">Selecciona tu método de pago</label>
+                        <select class="form-select" id="paymentMethod" required>
+                            <option value="">Selecciona un método</option>
+                            <option th:each="method : ${paymentMethods}" 
+                                    th:value="${method.id}" 
+                                    th:text="${method.name}">Método</option>
+                        </select>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Nota:</strong> Tu reserva será confirmada una vez procesemos tu pago.
+                    </div>
+                    
+                    <button type="submit" class="btn btn-reserve w-100">
+                        <i class="fas fa-check-circle me-2"></i>Confirmar Reserva
+                    </button>
+                    
+                    <div class="text-center mt-3">
+                        <a href="/" class="text-decoration-none">
+                            <i class="fas fa-arrow-left me-2"></i>Volver al inicio
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
